@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+# Cistercian Numeral Translator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application that translates decimal numbers (0–9999) into their **Cistercian rune** representations. This project demonstrates a mathematically clean SVG implementation of the historical monk-devised numeral system.
 
-Currently, two official plugins are available:
+## 🚀 Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+-   **Instant Translation:** Converts any number from 0 to 9999 into a unique Cistercian rune.
+-   **SVG Graphics:** High-quality, responsive vector graphics that look sharp at any size.
+-   **Export Capability:** Download the generated runes as `.svg` files for use in other projects.
+-   **Modern Stack:** Built with the latest tools for performance and accessibility.
 
-## React Compiler
+## 🛠️ Technology Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+-   **Framework:** React 19 (using native compiler improvements)
+-   **Build Tool:** Vite
+-   **Styling:** Tailwind CSS (utility-first design)
+-   **Icons:** Lucide React
+-   **Language:** TypeScript (strict typing)
 
-## Expanding the ESLint configuration
+## 🏗️ Technical Implementation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The core logic resides in `src/components/CistercianRune.tsx`. The implementation uses a **modular SVG approach** that avoids code repetition by leveraging geometric symmetry.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### How it works:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1.  **Central Stave:** A vertical line acts as the foundation for the numeral.
+2.  **Quadrants:** The space around the stave is divided into four quadrants, each representing a power of ten:
+    -   **Top Right:** Units (1–9)
+    -   **Top Left:** Tens (10–90) — *Mirrored horizontally*
+    -   **Bottom Right:** Hundreds (100–900) — *Mirrored vertically*
+    -   **Bottom Left:** Thousands (1000-9000) — *Mirrored both ways*
+3.  **SVG Transformations:** Instead of defining 36 separate paths, we define only **9 base paths** (for digits 1–9). These base paths are then reused in different quadrants using `scale` and `translate` transforms:
+    -   **Units:** No transformation (`translate(50, 20)`)
+    -   **Tens:** `scale(-1, 1)`
+    -   **Hundreds:** `scale(1, -1)`
+    -   **Thousands:** `scale(-1, -1)`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This approach ensures "mathematically clean" code where the visual representation perfectly matches the logic of the Cistercian system.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🏃 Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+To run the application locally, follow these steps:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+2.  **Start the development server:**
+    ```bash
+    npm run dev
+    ```
+
+3.  **Open in browser:**
+    Navigate to `http://localhost:5173` (or the port shown in your terminal).
+
+## 📄 License
+
+This project is open-source and available for educational purposes.
