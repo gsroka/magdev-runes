@@ -1,6 +1,5 @@
-import { useState, useDeferredValue, useCallback, type ChangeEvent } from 'react';
-import { preconnect, prefetchDNS } from 'react-dom';
 import { CistercianRune } from './components/CistercianRune';
+import { useRuneState } from './hooks/useRuneState';
 import './index.css';
 
 const BackgroundEffects = (
@@ -19,49 +18,37 @@ const Header = (
   </header>
 );
 
-function App() {
-  prefetchDNS('https://fonts.googleapis.com');
-  preconnect('https://fonts.gstatic.com');
-
-  const [inputValue, setInputValue] = useState<string>('1992');
-  const deferredValue = useDeferredValue(inputValue);
-  
-  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  }, []);
-
-  const validateValue = (val: string) => {
-    const num = parseInt(val, 10);
-    const isValid = !isNaN(num) && num >= 1 && num <= 9999;
-    return { num, isValid };
-  };
-
-  const { num: deferredNum, isValid: isDeferredValid } = validateValue(deferredValue);
-  const displayValue = isDeferredValid ? deferredNum : 0;
-
-  const { isValid: isImmediateValid } = validateValue(inputValue);
-  const isError = inputValue !== '' && !isImmediateValid;
+export default function App() {
+  const {
+    inputValue, shakeKey, displayValue,
+    isError, isDeferredValid, deferredNum,
+    svgRef, handleInputChange, handleDownload,
+  } = useRuneState();
 
   return (
     <>
       {BackgroundEffects}
-      
+
       <div className="app-container">
         <div className="glass-panel">
           {Header}
 
           <main className="rune-display">
-            <div className={`rune-wrapper ${isError ? 'error-shake' : ''}`}>
-              <CistercianRune 
-                value={displayValue} 
-                color={isError ? "var(--error-color)" : "var(--accent-color)"}
-                className="rune-svg" 
+            <div key={shakeKey} className={`rune-wrapper ${isError ? 'error-shake' : ''}`}>
+              <CistercianRune
+                ref={svgRef}
+                value={displayValue}
+                color={isError ? 'var(--error-color)' : 'var(--accent-color)'}
+                className="rune-svg"
               />
             </div>
           </main>
 
           <div className="input-section">
-            <label htmlFor="rune-input" className="input-label">Enter a number (1-9999)</label>
+            <label htmlFor="rune-input" className="input-label">
+              Enter a number (1–9999)
+            </label>
+
             <div className="input-with-glow">
               <input
                 id="rune-input"
@@ -75,16 +62,30 @@ function App() {
                 className={`modern-input ${isError ? 'input-error' : ''}`}
                 autoFocus
               />
-              <div className={`input-glow ${isError ? 'glow-error' : ''}`}></div>
+              <div className={`input-glow ${isError ? 'glow-error' : ''}`} />
             </div>
-            <div className="status-message">
-              {isError ? "Please enter a valid integer between 1 and 9999." : "Valid Rune Sequence"}
-            </div>
+
+            <p className={`status-message ${isError ? 'status-error' : ''}`}>
+              {isError
+                ? 'Please enter a valid integer between 1 and 9999.'
+                : 'Valid Rune Sequence'}
+            </p>
+
+            <button
+              className="download-btn"
+              onClick={handleDownload}
+              disabled={!isDeferredValid}
+              aria-label={
+                isDeferredValid
+                  ? `Download SVG for ${deferredNum}`
+                  : 'No valid rune to download'
+              }
+            >
+              Download SVG
+            </button>
           </div>
         </div>
       </div>
     </>
   );
 }
-
-export default App;

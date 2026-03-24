@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150" fill="none" stroke="#58a6ff" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- Central stem -->
+  <line x1="50" y1="20" x2="50" y2="130"/>
+  <!-- Top-right: 1 (horizontal) -->
+  <path d="M 0,0 L 30,0" transform="translate(50,20)"/>
+  <!-- Top-right: 6 (vertical right) combined = 7 -->
+  <path d="M 30,0 L 30,30" transform="translate(50,20)"/>
+  <!-- Bottom-left: 1000 marker -->
+  <path d="M 0,0 L 30,0" transform="translate(50,130) scale(-1,-1)"/>
+</svg>

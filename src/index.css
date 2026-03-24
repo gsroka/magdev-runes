@@ -1,16 +1,18 @@
 :root {
-  --bg-color: #0d1117;
-  --panel-bg: rgba(22, 27, 34, 0.7);
-  --border-color: rgba(48, 54, 61, 0.5);
-  --text-primary: #f0f6fc;
-  --text-secondary: #8b949e;
-  --accent-color: #58a6ff;
-  --accent-glow: rgba(88, 166, 255, 0.4);
-  --error-color: #f85149;
-  --error-glow: rgba(248, 81, 73, 0.4);
+  --bg-color:      #0d1117;
+  --panel-bg:      rgba(22, 27, 34, 0.7);
+  --border-color:  rgba(48, 54, 61, 0.5);
+  --text-primary:  #f0f6fc;
+  --text-secondary:#8b949e;
+  --accent-color:  #58a6ff;
+  --accent-glow:   rgba(88, 166, 255, 0.4);
+  --error-color:   #f85149;
+  --error-glow:    rgba(248, 81, 73, 0.4);
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -24,22 +26,26 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  /* Allow vertical scroll on small / high-zoom screens */
+  overflow-x: hidden;
 }
 
 #root {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-block: 2rem;
 }
+
+/* ─── Layout ──────────────────────────────────────────────── */
 
 .app-container {
   position: relative;
   width: 100%;
   max-width: 600px;
-  padding: 2rem;
+  padding-inline: 2rem;
   z-index: 10;
 }
 
@@ -57,6 +63,8 @@ body {
   position: relative;
   z-index: 2;
 }
+
+/* ─── Header ──────────────────────────────────────────────── */
 
 header {
   text-align: center;
@@ -80,6 +88,8 @@ header {
   max-width: 80%;
   margin: 0 auto;
 }
+
+/* ─── Rune display ────────────────────────────────────────── */
 
 .rune-display {
   display: flex;
@@ -108,16 +118,20 @@ header {
   filter: drop-shadow(0 0 8px var(--accent-glow));
 }
 
+/* ─── Shake animation ─────────────────────────────────────── */
+
 .error-shake {
-  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+  animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
 }
 
 @keyframes shake {
   10%, 90% { transform: translate3d(-1px, 0, 0); }
-  20%, 80% { transform: translate3d(2px, 0, 0); }
+  20%, 80% { transform: translate3d(2px,  0, 0); }
   30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-  40%, 60% { transform: translate3d(4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px,  0, 0); }
 }
+
+/* ─── Input section ───────────────────────────────────────── */
 
 .input-section {
   display: flex;
@@ -174,10 +188,7 @@ header {
 
 .input-glow {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   border-radius: 16px;
   background: var(--accent-color);
   filter: blur(20px);
@@ -194,6 +205,8 @@ header {
   background: var(--error-color);
 }
 
+/* ─── Status message ──────────────────────────────────────── */
+
 .status-message {
   height: 1.5rem;
   font-size: 0.875rem;
@@ -201,19 +214,49 @@ header {
   transition: color 0.3s ease;
 }
 
-.input-error ~ .status-message,
-.app-container:has(.input-error) .status-message {
+.status-error {
   color: var(--error-color);
 }
 
-/* Background gradient orbs */
+/* ─── Download button ─────────────────────────────────────── */
+
+.download-btn {
+  margin-top: 0.25rem;
+  padding: 0.65rem 1.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--accent-color);
+  background: transparent;
+  color: var(--accent-color);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.download-btn:not(:disabled):hover {
+  background: rgba(88, 166, 255, 0.12);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.download-btn:not(:disabled):active {
+  background: rgba(88, 166, 255, 0.22);
+}
+
+.download-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+/* ─── Background gradient orbs ───────────────────────────── */
+
 .background-effects {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  inset: 0;
   overflow: hidden;
+  pointer-events: none;
   z-index: 0;
 }
 
@@ -240,13 +283,15 @@ header {
   right: -50px;
 }
 
-/* Hide number buttons in WebKit & Firefox */
+/* ─── Hide number spin buttons (WebKit & Firefox) ─────────── */
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
 }
+
 input[type="number"] {
   -moz-appearance: textfield;
 }
