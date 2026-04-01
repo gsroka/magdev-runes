@@ -85,7 +85,18 @@ export function useRuneState(): RuneState {
   const handleDownload = useCallback(() => {
     if (!svgRef.current || !isDeferredValid) return;
 
-    const svgStr = new XMLSerializer().serializeToString(svgRef.current);
+    let svgStr = new XMLSerializer().serializeToString(svgRef.current);
+
+    // Replace CSS variables with hardcoded hex values for standalone compatibility
+    svgStr = svgStr
+      .replace(/var\(--accent-color\)/g, '#58a6ff')
+      .replace(/var\(--error-color\)/g, '#f85149');
+
+    // Add XML declaration if missing
+    if (!svgStr.startsWith('<?xml')) {
+      svgStr = '<?xml version="1.0" encoding="UTF-8"?>\n' + svgStr;
+    }
+
     const url    = URL.createObjectURL(new Blob([svgStr], { type: 'image/svg+xml' }));
     const anchor = Object.assign(document.createElement('a'), {
       href:     url,

@@ -71,6 +71,7 @@ export const CistercianRune = memo(function CistercianRune({
   return (
     <svg
       ref={ref}
+      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 100 150"
       fill="none"
       stroke={color}
