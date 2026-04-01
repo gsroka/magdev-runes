@@ -1,22 +1,9 @@
 import { CistercianRune } from './components/CistercianRune';
+import { Header } from './components/Header';
+import { BackgroundEffects } from './components/BackgroundEffects';
 import { useRuneState } from './hooks/useRuneState';
+import { RUNE_MIN, RUNE_MAX } from './constants/rune';
 import './index.css';
-
-const BackgroundEffects = (
-  <div className="background-effects">
-    <div className="glow-orb orb-1"></div>
-    <div className="glow-orb orb-2"></div>
-  </div>
-);
-
-const Header = (
-  <header>
-    <h1 className="title">Cistercian Runes</h1>
-    <p className="subtitle">
-      An ancient numeral system representing numbers from 1 to 9999 in a single glyph.
-    </p>
-  </header>
-);
 
 export default function App() {
   const {
@@ -27,11 +14,11 @@ export default function App() {
 
   return (
     <>
-      {BackgroundEffects}
+      <BackgroundEffects />
 
       <div className="app-container">
         <div className="glass-panel">
-          {Header}
+          <Header />
 
           <main className="rune-display">
             <div key={shakeKey} className={`rune-wrapper ${isError ? 'error-shake' : ''}`}>
@@ -46,19 +33,18 @@ export default function App() {
 
           <div className="input-section">
             <label htmlFor="rune-input" className="input-label">
-              Enter a number (1–9999)
+              Enter a number ({RUNE_MIN}–{RUNE_MAX})
             </label>
 
             <div className="input-with-glow">
               <input
                 id="rune-input"
-                type="number"
-                min="1"
-                max="9999"
-                step="1"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={inputValue}
                 onChange={handleInputChange}
-                placeholder="e.g. 1993"
+                placeholder={`e.g. ${RUNE_MAX}`}
                 className={`modern-input ${isError ? 'input-error' : ''}`}
                 autoFocus
               />
@@ -67,7 +53,7 @@ export default function App() {
 
             <p className={`status-message ${isError ? 'status-error' : ''}`}>
               {isError
-                ? 'Please enter a valid integer between 1 and 9999.'
+                ? `Please enter a valid integer between ${RUNE_MIN} and ${RUNE_MAX}.`
                 : 'Valid Rune Sequence'}
             </p>
 

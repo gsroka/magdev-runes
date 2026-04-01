@@ -1,4 +1,6 @@
 import { memo, type Ref } from 'react';
+import { RUNE_STROKE_WIDTH } from '../constants/rune';
+import { decomposeRune } from '../utils/runeUtils';
 
 type CistercianRuneProps = {
   value: number;
@@ -36,18 +38,6 @@ const QUADRANTS = [
 ] as const;
 
 /**
- * Decomposes a Cistercian-valid integer into its four positional digits.
- *
- * @param n - Integer in the range 1–9999.
- * @returns Tuple `[units, tens, hundreds, thousands]`.
- *          Returns `[0, 0, 0, 0]` for out-of-range or non-integer input.
- */
-const decompose = (n: number): [number, number, number, number] =>
-  n >= 1 && n <= 9999 && Number.isInteger(n)
-    ? [n % 10, Math.floor((n % 100) / 10), Math.floor((n % 1000) / 100), Math.floor(n / 1000)]
-    : [0, 0, 0, 0];
-
-/**
  * Renders a single Cistercian numeral as an inline SVG.
  *
  * In React 19, `ref` is passed as a regular prop; `forwardRef` is not required.
@@ -62,10 +52,10 @@ export const CistercianRune = memo(function CistercianRune({
   value,
   ref,
   color = 'currentColor',
-  strokeWidth = 6,
+  strokeWidth = RUNE_STROKE_WIDTH,
   className = '',
 }: CistercianRuneProps) {
-  const digits  = decompose(value);
+  const digits  = decomposeRune(value);
   const isValid = digits.some(Boolean);
 
   return (
